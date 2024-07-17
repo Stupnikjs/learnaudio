@@ -16,8 +16,13 @@ const (
 )
 
 var (
-	tau = math.Pi * 2
+	deuxPi = math.Pi * 2
 )
+
+/* ffmpeg -f s16le -ar 44100 -ac 2 -i out.bin output.mp3
+s16le little endian
+
+*/
 
 func main() {
 	fmt.Fprintf(os.Stderr, "generating sine wave..\n")
@@ -31,9 +36,12 @@ func generate() {
 		end   float64 = 1.0e-4
 	)
 	nsamps := Duration * SampleRate
-	var angle float64 = tau / float64(nsamps)
+
+	// La taille de l'angle fractionné en nsamples
+	var angle float64 = deuxPi / float64(nsamps)
 	file := "out.bin"
 	f, _ := os.Create(file)
+
 	decayfac := math.Pow(end/start, 1.0/float64(nsamps))
 	for i := 0; i < nsamps; i++ {
 		sample := math.Sin(angle * Frequency * float64(i))
